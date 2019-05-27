@@ -13,17 +13,20 @@ import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity implements MenuRequest.Callback {
     private MenuItemAdapter menuAdapter;
-
+    // Initialize variable
     ListView list;
 
+    // Show the activity menu layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        Intent intent = getIntent();
 
+        // Save the intent from the last activity including the category that was clicked
+        Intent intent = getIntent();
         String category = (String) intent.getSerializableExtra("category");
 
+        // Make request from server for menu items in the clicked category
         MenuRequest x = new MenuRequest(MenuActivity.this);
         x.getMenu( MenuActivity.this, category);
 
@@ -32,6 +35,7 @@ public class MenuActivity extends AppCompatActivity implements MenuRequest.Callb
         list.setOnItemClickListener(new checkItemClick());
     }
 
+    // Put the information from the server into a the listview
     @Override
     public void gotMenu(ArrayList<MenuItem> menuItems) {
         menuAdapter = new MenuItemAdapter(MenuActivity.this, R.layout.menu_items_layout, menuItems);
@@ -39,16 +43,19 @@ public class MenuActivity extends AppCompatActivity implements MenuRequest.Callb
         list.setAdapter(menuAdapter);
     }
 
-    @Override
+    // No further action when error is returned
+@Override
     public void gotMenuError(String message) {
 
     }
 
+    // Set a click listener for the listview items
     private class checkItemClick implements AdapterView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            MenuItem clickedDish = (MenuItem) parent.getItemAtPosition(position);
 
+            // Start Menu item activity, give it the clicked menu items as information
+            MenuItem clickedDish = (MenuItem) parent.getItemAtPosition(position);
             Intent intent = new Intent(MenuActivity.this,  MenuItemActivity.class);
             intent.putExtra("clickedDish",clickedDish);
 

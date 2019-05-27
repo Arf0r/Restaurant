@@ -11,18 +11,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
 
     ArrayList<MenuItem> menuItems;
 
+    // Contructor
     public MenuItemAdapter(Context context, int resource, ArrayList<MenuItem> menuItems) {
         super(context, resource, menuItems);
         this.menuItems = menuItems;
@@ -31,25 +27,22 @@ public class MenuItemAdapter extends ArrayAdapter<MenuItem> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        // Set the adapter layout to menu items layout
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.menu_items_layout, parent, false);
         }
 
+        // Get the strings from the object that was clicked, and set the views of the adapter accordingly
         MenuItem menuItem = menuItems.get(position);
-
         TextView dishName= convertView.findViewById(R.id.dishName);
         dishName.setText(menuItem.getName());
-
         TextView dishPrice= convertView.findViewById(R.id.dishPrice);
-        dishPrice.setText(String.valueOf(menuItem.getPrice()));
-
+        dishPrice.setText("€" + String.valueOf(menuItem.getPrice() + ",-"));
         ImageView dishImage = convertView.findViewById(R.id.dishImage);
+
+        // Use picasso extension to handle the image url
         String url = String.valueOf(menuItem.getImageUrl());
-        Log.d("tag", url);
-
         Picasso.with(getContext()).load(url).into(dishImage);
-
 
         return convertView;
     }

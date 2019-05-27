@@ -2,12 +2,14 @@ package com.example.restaurant;
 import java.io.Serializable;
 
 public class MenuItem implements Serializable {
+    // Initialize variables
     private String name;
     private String description;
     private String imageUrl;
     private int price;
     private String category;
 
+    // Contructor
     public MenuItem(String name, String description, String image, int price, String category) {
         this.name = name;
         this.description = description;
@@ -16,6 +18,7 @@ public class MenuItem implements Serializable {
         this.category = category;
     }
 
+    // Getters and setters for the variables of this class
     public String getName() {
         return name;
     }

@@ -23,16 +23,21 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
         this.context = incomingContext;
     }
 
+    // If error is returned, get the message
     @Override
     public void onErrorResponse(VolleyError error) {
         callback.gotMenuError(error.getMessage());
     }
 
+    // If server responds as expected...
     @Override
     public void onResponse(JSONObject response) {
         try {
+            // Make a new arraylist and save the array from the server in JSONARRAY
             ArrayList arrayList = new ArrayList();
             JSONArray menuList = response.getJSONArray("items");
+
+            // Loop over the items in the jsonarray and save the data in Strings
             for (int i = 0; i < menuList.length(); i++) {
                 JSONObject menuItem = menuList.getJSONObject(i);
                 String name = menuItem.getString("name");
@@ -40,10 +45,14 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
                 String image = menuItem.getString("image_url");
                 int price = menuItem.getInt("price");
                 String category = menuItem.getString("category");
+
+                // Create new menu item object with the data that was just saved from the server
+                // and add the object to the arralist
                 MenuItem inputMenuItem =  new MenuItem(name, description, image, price, category);
                 arrayList.add(inputMenuItem);
             }
-            Log.d("tag", String.valueOf(arrayList));
+
+            // Return the arraylist to the requesting page using callback
             callback.gotMenu(arrayList);
         }
         catch (JSONException e) {
@@ -51,6 +60,7 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
         }
     }
 
+    // Make the request from server
     public void getMenu(Callback activity, String category) {
         this.callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -58,6 +68,7 @@ public class MenuRequest implements Response.Listener<JSONObject>, Response.Erro
         queue.add(jsonObjectRequest);
     }
 
+    // Returns values to requesting page
     public interface Callback {
         void gotMenu(ArrayList<MenuItem> menuItems);
         void gotMenuError(String message);

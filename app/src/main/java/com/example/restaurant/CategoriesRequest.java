@@ -18,23 +18,30 @@ public class CategoriesRequest implements Response.Listener<JSONObject>, Respons
     private Context context;
     private Callback callback;
 
+    // Constructor
     public CategoriesRequest(Context incomingContext) {
         this.context = incomingContext;
     }
 
+    // If error is returned, get the message
     @Override
     public void onErrorResponse(VolleyError error) {
         callback.gotCategoriesError(error.getMessage());
     }
 
+    // If server responds as expected...
     @Override
     public void onResponse(JSONObject response) {
         try {
+            // Make a new arraylist, and save the array from server in JSONArray
             ArrayList arrayList = new ArrayList();
             JSONArray categoryList = response.getJSONArray("categories");
+
+            // Loop over server information and save the strings into the new arrayList
             for (int i = 0; i < categoryList.length(); i++) {
                 arrayList.add(categoryList.getString(i));
             }
+            // Return the information via callback
             callback.gotCategories(arrayList);
 
         }
@@ -43,11 +50,13 @@ public class CategoriesRequest implements Response.Listener<JSONObject>, Respons
         }
     }
 
+    // Parse information back to request page
     public interface Callback {
         void gotCategories(ArrayList<String> categories);
         void gotCategoriesError(String message);
     }
 
+    // Make the request from the server
     public  void getCategories(Callback activity) {
         this.callback = activity;
         RequestQueue queue = Volley.newRequestQueue(context);
